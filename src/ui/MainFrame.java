@@ -5,6 +5,7 @@
  */
 package ui;
 
+import DAO.ProjectDAO;
 import DAO.todoDAO;
 import entities.Project;
 import entities.Todos;
@@ -22,7 +23,9 @@ public class MainFrame extends javax.swing.JFrame {
     int row = 0;
     int col = 0;
     todoDAO dao = new todoDAO();
+    ProjectDAO daopj = new ProjectDAO();
     ArrayList<Todos> list = new ArrayList<Todos>();
+
     /**
      * Creates new form MainFrame
      */
@@ -31,12 +34,11 @@ public class MainFrame extends javax.swing.JFrame {
         init();
         setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
     }
-    
-    void init()
-    {
-         setTitle("Todos của Long̣");
-         setVisible(true);
-         setLocationRelativeTo(null);
+
+    void init() {
+        setTitle("Todos của Long̣");
+        setVisible(true);
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -74,18 +76,25 @@ public class MainFrame extends javax.swing.JFrame {
 
         tblTodo.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null}
+                {null, null, null, null}
             },
             new String [] {
-                "Nội Dung", "Project", "Check"
+                "ID", "Nội Dung", "Project", "Check"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Boolean.class
+                java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, true
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         tblTodo.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
@@ -100,7 +109,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tblTodo);
         if (tblTodo.getColumnModel().getColumnCount() > 0) {
-            tblTodo.getColumnModel().getColumn(2).setResizable(false);
+            tblTodo.getColumnModel().getColumn(3).setResizable(false);
         }
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -174,17 +183,17 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void mnuUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuUserActionPerformed
         // TODO add your handling code here:
-        new QuanlyFrame(this, rootPaneCheckingEnabled); 
+        new QuanlyFrame(this, rootPaneCheckingEnabled);
     }//GEN-LAST:event_mnuUserActionPerformed
 
     private void mnuProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuProjectActionPerformed
         // TODO add your handling code here:
-        new ProjectFrame(this, rootPaneCheckingEnabled); 
+        new ProjectFrame(this, rootPaneCheckingEnabled);
     }//GEN-LAST:event_mnuProjectActionPerformed
 
     private void jMenu2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu2ActionPerformed
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_jMenu2ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
@@ -208,15 +217,15 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void tblTodoPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tblTodoPropertyChange
         // TODO add your handling code here:
-        row = tblTodo.getSelectedRow();
-        col = tblTodo.getSelectedColumn();
-        for (Todos todo: list){
-            dao.update(todo);
+        if (tblTodo.getSelectedRow() > -1 && tblTodo.getSelectedColumn() > -1) {
+            row = tblTodo.getSelectedRow();
+            if(row != -1){
+                Todos todo = new Todos();
+                todo = dao.findById(String.valueOf(tblTodo.getModel().getValueAt(row, 0)));
+                todo.setHoanthanh(Boolean.valueOf(tblTodo.getModel().getValueAt(row, 3).toString()));
+                dao.update(todo);
+            }
         }
-//        int rowTbl = tblTodo.convertRowIndexToModel(row);
-//        System.out.println(list.get(rowTbl).getId());
-//        list.clear();
-//        loadTodo();
     }//GEN-LAST:event_tblTodoPropertyChange
 
     private void tblTodoVetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {//GEN-FIRST:event_tblTodoVetoableChange
@@ -279,6 +288,7 @@ public class MainFrame extends javax.swing.JFrame {
                 Object[] row = {
                     nh.getId(),
                     nh.getNoiDung(),
+                    daopj.findById(String.valueOf(nh.getProject())).getTenProject(),
                     nh.getHoanthanh()
                 };
                 model.addRow(row);

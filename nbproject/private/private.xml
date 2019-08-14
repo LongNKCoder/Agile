@@ -5,9 +5,11 @@
         <group>
             <file>file:/D:/New%20Folder%20(4)/JavaApplication1/src/ui/MainFrame.java</file>
             <file>file:/D:/New%20Folder%20(4)/JavaApplication1/src/ui/ForgetFrame.java</file>
+            <file>file:/D:/New%20Folder%20(4)/JavaApplication1/src/helper/ShareHelper.java</file>
             <file>file:/D:/New%20Folder%20(4)/JavaApplication1/src/ui/LoginFrame.java</file>
             <file>file:/D:/New%20Folder%20(4)/JavaApplication1/src/ui/DangkyFrame.java</file>
             <file>file:/D:/New%20Folder%20(4)/JavaApplication1/src/ui/ProjectFrame.java</file>
+            <file>file:/D:/New%20Folder%20(4)/JavaApplication1/src/DAO/ProjectDAO.java</file>
         </group>
     </open-files>
 </project-private>

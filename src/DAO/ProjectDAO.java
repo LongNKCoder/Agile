@@ -26,10 +26,11 @@ public class ProjectDAO {
     }
     
     public void update(Project model){
-        String sql="UPDATE Project SET ten=?, nguoidung_id=?,  WHERE id=?";
+        String sql="UPDATE Project SET ten=?, nguoidung_id=?, hoanthanh=?  WHERE id=?";
         JdbcHelper.executeUpdate(sql, 
                 model.getTenProject(),
                 model.getNguoiDung(),
+                model.getHoanthanh(),
                 model.getId());
     }
     

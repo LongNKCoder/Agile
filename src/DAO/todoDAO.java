@@ -27,7 +27,7 @@ public class todoDAO {
     }
     
     public void update(Todos model){
-        String sql="UPDATE Todos SET noidung=?, nguoidung_id=?, project_id=?, hoanthanh=?,  WHERE id=?";
+        String sql="UPDATE Todos SET noidung=?, nguoidung_id=?, project_id=?, hoanthanh=?  WHERE id=?";
         JdbcHelper.executeUpdate(sql, 
                 model.getNoiDung(),
                 model.getNguoiDung(),
@@ -53,7 +53,7 @@ public class todoDAO {
 //    }
     
     public Todos findById(String manh){
-        String sql="SELECT * FROM Todos WHERE noidung=? order by hoanthanh";
+        String sql="SELECT * FROM Todos WHERE id=? order by hoanthanh";
         List<Todos> list = select(sql, manh);
         return list.size() > 0 ? list.get(0) : null;
     }

@@ -192,11 +192,16 @@ public class ProjectFrame extends javax.swing.JDialog {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true, false
+                false, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        tblProjectTodo.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                tblProjectTodoPropertyChange(evt);
             }
         });
         jScrollPane2.setViewportView(tblProjectTodo);
@@ -334,10 +339,30 @@ public class ProjectFrame extends javax.swing.JDialog {
 
     private void tblProjectPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tblProjectPropertyChange
         // TODO add your handling code here:
-        for (Project pj : list){
-            dao.update(pj);
+        if (tblProject.getSelectedRow() > -1 && tblProject.getSelectedColumn() > -1) {
+            int row = tblProject.getSelectedRow();
+            if(row != -1){
+                Project pj = new Project();
+                pj = dao.findById(String.valueOf(tblProject.getModel().getValueAt(row, 0)));
+                pj.setHoanthanh(Boolean.valueOf(tblProject.getModel().getValueAt(row, 2).toString()));
+                dao.update(pj);
+            }
         }
     }//GEN-LAST:event_tblProjectPropertyChange
+
+    private void tblProjectTodoPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tblProjectTodoPropertyChange
+        // TODO add your handling code here:
+        if (tblProjectTodo.getSelectedRow() > -1 && tblProjectTodo.getSelectedColumn() > -1) {
+            int row = tblProjectTodo.getSelectedRow();
+            if(row != -1){
+                Todos todo = new Todos();
+                todo = daoTodo.findById(String.valueOf(tblProjectTodo.getModel().getValueAt(row, 0)));
+                todo.setNoiDung(tblProjectTodo.getModel().getValueAt(row, 1).toString());
+                todo.setNguoiDung(daoNd.findByID(tblProjectTodo.getModel().getValueAt(row, 2).toString()).getId());
+                daoTodo.update(todo);
+            }
+        }
+    }//GEN-LAST:event_tblProjectTodoPropertyChange
 
     /**
      * @param args the command line arguments
